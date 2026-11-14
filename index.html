@@ -9,7 +9,6 @@
     <link rel="preload" href="fonts/google-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <script src="app.js" defer></script>
-    <script src="/_vercel/insights/script.js" defer></script>
   </head>
   <body>
     <div class="x-bg" aria-hidden="true">
@@ -17,6 +16,7 @@
     </div>
     <div class="page" id="top">
       <main class="main">
+        <div class="x-center">
         <header class="x-intro">
           <button class="x-theme" id="theme-btn" type="button" aria-label="Switch to dark theme"></button>
           <p class="x-legend">See a blinking pink dot? That's something I'm working on! Tap its link to follow along as it comes together.</p>
@@ -49,12 +49,12 @@
             <li>
               <h3 class="x-live">Moxie, Robot Dog Joint Health Check</h3>
               <p class="x-meta">Petoi Bittle X · C++ · ESP32 BiBoard · Servos, calibration</p>
-              <p>A C++ program for my C++ class that runs from my laptop over USB and tests all 9 of Moxie's servo joints for accuracy, speed, and steadiness. Joints that drift get recalibrated and retested. Worn servos get flagged, since no code can fix those. Each joint ends up rated Pass, Fixed, or Needs New Servo, and Moxie's original settings are restored before she goes back on Dec 21, 2026.</p>
+              <p>A C++ program that tests Moxie's 9 servo joints, recalibrates any that drift, and flags worn servos. Each joint is rated Pass, Fixed, or Needs New Servo.</p>
             </li>
             <li>
               <h3>Arduino LED Circuit</h3>
               <p class="x-meta">Spring 2026 · Robotics Club · Arduino, circuit wiring</p>
-              <p>Wired the breadboard hardware for an Arduino LED circuit; a teammate wrote the code.</p>
+              <p>Wired the breadboard for an Arduino LED circuit; a teammate wrote the code.</p>
               <a class="x-watch" href="https://x.com/talesfromturner" target="_blank" rel="noopener noreferrer">Watch the video on X</a>
             </li>
           </ul>
@@ -66,23 +66,24 @@
           </div>
           <ul class="x-entries">
             <li>
-              <h3 class="x-live">Chemistry Laboratory Assistant <span class="x-sub">· Borough of Manhattan Community College · Sep 2026 – Present</span></h3>
+              <h3 class="x-live x-live-2">Chemistry Laboratory Assistant <span class="x-sub">· Borough of Manhattan Community College · Sep 2026 – Present</span></h3>
               <ul>
-                <li>Prepares 18 lab stations before each class, keeping glassware above required stock.</li>
-                <li>Reorganized the department's molecular model kits, freeing 10+ cases of storage.</li>
+                <li>Prepares 18 lab stations before each class</li>
+                <li>Reorganized the molecular model kits, freeing 10+ cases of storage</li>
               </ul>
             </li>
             <li>
               <h3>Technical Product Manager <span class="x-sub">· Julien (AI SaaS startup) · Aug 2025 – Mar 2026</span></h3>
               <ul>
-                <li>Worked with engineers on an AI platform to improve profitability for NYC restaurants.</li>
-                <li>Designed a cost dashboard (TDABC) linking labor, inventory and invoice data.</li>
-                <li>Ran 20+ user interviews.</li>
+                <li>Built a cost dashboard (TDABC) for an AI restaurant platform</li>
+                <li>Ran 20+ user interviews</li>
               </ul>
             </li>
           </ul>
         </section>
 
+        </div>
+        <aside class="x-side x-side-r" aria-label="Competitions">
         <section class="section" id="competitions">
           <div class="head">
             <h2>Competitions</h2>
@@ -102,6 +103,24 @@
           </ul>
         </section>
 
+        </aside>
+        <aside class="x-side x-side-l" aria-label="Skills and education">
+        <section class="section" id="skills">
+          <div class="head">
+            <h2>Skills</h2>
+          </div>
+          <div class="x-skills">
+          <dl>
+          <div><dt>Hardware</dt><dd>Arduino, ESP32, breadboard prototyping, circuit wiring, servo calibration</dd></div>
+          <div><dt>Programming</dt><dd>C++</dd></div>
+          <div><dt>AI Tools</dt><dd>Claude, Gemini, Grok, Hark, Hermes, Perplexity</dd></div>
+          </dl>
+          <dl>
+          <div><dt>Development Tools</dt><dd>Antigravity, Git and GitHub, OpenCode, VS Code, Windsurf</dd></div>
+      </dl>
+          </div>
+        </section>
+
         <section class="section" id="education">
           <div class="head">
             <h2>Education</h2>
@@ -111,6 +130,7 @@
             <p class="x-meta">Robotics Club (since May 2026) · Engineering Club (since Oct 2026)</p>
           </div>
         </section>
+        </aside>
       </main>
       <p class="x-thanks">Thank you for stopping by. I hope you'll check back as these builds come together.</p>
       <footer class="foot">
@@ -118,23 +138,5 @@
       </footer>
     </div>
 
-    <div class="x-safe" id="x-safe" aria-hidden="true"></div>
-    <button class="x-bubble" id="skills-bubble" type="button" aria-expanded="false" aria-controls="skills-drawer">Skills</button>
-    <div class="x-scrim" id="skills-scrim" aria-hidden="true"></div>
-    <aside class="x-drawer" id="skills-drawer" role="dialog" aria-modal="true" aria-labelledby="skills-title" inert>
-      <div class="x-drawer__top">
-        <h2 id="skills-title" tabindex="-1">Skills</h2>
-        <button class="x-close" id="skills-close" type="button" aria-label="Close skills">×</button>
-      </div>
-      <dl class="x-skills">
-        <div><dt>Hardware</dt><dd>Arduino, ESP32, breadboard prototyping, circuit wiring, servo calibration</dd></div>
-        <div><dt>Programming</dt><dd>C++</dd></div>
-        <div><dt>Development Tools</dt><dd>Antigravity, Git and GitHub, OpenCode, VS Code, Windsurf</dd></div>
-        <div><dt>AI Tools</dt><dd>Claude, Gemini, Hark, Hermes, Perplexity</dd></div>
-        <div><dt>Product</dt><dd>User research and interviews, product design docs, technical documentation, cost modeling (TDABC), dashboard design, project scheduling</dd></div>
-        <div><dt>Collaboration</dt><dd>Canva, Jira</dd></div>
-        <div><dt>Lab</dt><dd>Lab safety and PPE, lab station prep and inventory</dd></div>
-      </dl>
-    </aside>
   </body>
 </html>

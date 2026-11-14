@@ -46,19 +46,13 @@
   --gutter: clamp(20px, 5vw, 32px);
   --tap: 44px;
   --x-pink: #ff77a9;
-  --x-choc: #8b5e3c;
-  --x-matte: #f7f5f2;
   --x-brown: light-dark(#8b5e3c, #c99a72);
+  --x-dark-choc: light-dark(#6b4429, #c99a72);
   --x-hazelnut: light-dark(#a67b5b, #c9a27e);
-  --x-panel: light-dark(#efebe6, #30231b);
-  --x-shade: light-dark(#3b2a20, #0d0806);
-  --x-scrim: color-mix(in srgb, var(--x-shade) 20%, transparent);
-  --x-shadow: color-mix(in srgb, var(--x-shade) 12%, transparent);
   --x-trace: light-dark(rgba(255, 119, 169, 0.4), rgba(255, 119, 169, 0.3));
   --x-trace-hi: light-dark(rgba(255, 119, 169, 0.9), rgba(255, 119, 169, 0.8));
   --x-trace-glow: light-dark(rgba(255, 119, 169, 0.1), rgba(255, 119, 169, 0.12));
   --x-flex: "Google Sans Flex", var(--sans);
-  --x-bubble: 56px;
 }
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] { color-scheme: dark; }
@@ -74,6 +68,13 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
+/* Halo in the page colour around every letter: circuit lines fade out at the words, with no boxes. */
+main, header, footer {
+  --halo: var(--fill-primary-on);
+  text-shadow:
+    1px 0px 0 var(--halo), -1px 0px 0 var(--halo), 0px 1px 0 var(--halo), 0px -1px 0 var(--halo), 0.7px 0.7px 0 var(--halo), -0.7px 0.7px 0 var(--halo), 0.7px -0.7px 0 var(--halo), -0.7px -0.7px 0 var(--halo), 2px 0px 0 var(--halo), -2px 0px 0 var(--halo), 0px 2px 0 var(--halo), 0px -2px 0 var(--halo), 1.4px 1.4px 0 var(--halo), -1.4px 1.4px 0 var(--halo), 1.4px -1.4px 0 var(--halo), -1.4px -1.4px 0 var(--halo), 3px 0px 0 var(--halo), -3px 0px 0 var(--halo), 0px 3px 0 var(--halo), 0px -3px 0 var(--halo), 2.1px 2.1px 0 var(--halo), -2.1px 2.1px 0 var(--halo), 2.1px -2.1px 0 var(--halo), -2.1px -2.1px 0 var(--halo),
+    0 0 6px var(--halo), 0 0 10px var(--halo);
+}
 a { color: inherit; }
 b, strong { font-weight: var(--weight-bold); }
 p { margin: 0; text-wrap: pretty; }
@@ -87,13 +88,13 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px;
+  gap: 8px;
 }
 .main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
 
 /* Sections */
 .section { min-width: 0; }
-.section > * + * { margin-top: clamp(20px, 2.4vw, 28px); }
+.section > * + * { margin-top: clamp(10px, 1.2vw, 14px); }
 .section > .head + * { margin-top: 0; }
 .head { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 10px 40px; align-items: end; }
 .head h2 { font: var(--type-title); }
@@ -103,7 +104,7 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
 /* Footer */
 .foot {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-  gap: 16px 24px; padding-top: 24px;
+  gap: 16px 24px; padding-top: 12px;
   font-size: var(--size-small); color: var(--text-secondary);
 }
 
@@ -136,7 +137,7 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
 
 /* Intro: name, one line, where, and a row of plain links. */
 .x-intro { position: relative; display: grid; gap: 10px; padding-bottom: clamp(28px, 4vw, 40px); }
-.x-intro h1 { font: 700 clamp(30px, 1.6vw + 24px, 40px)/1.15 var(--sans); color: var(--x-brown); padding-right: 52px; }
+.x-intro h1 { font: 700 clamp(30px, 1.6vw + 24px, 40px)/1.15 var(--sans); color: var(--x-dark-choc); padding-right: 52px; }
 .x-title { font-size: var(--size-prose); color: var(--text-primary); max-width: 52ch; }
 .x-where { font-family: var(--x-flex); font-weight: 300; font-size: var(--size-small); color: var(--text-secondary); }
 .x-links { display: flex; flex-wrap: wrap; gap: 0 22px; margin-top: 4px; }
@@ -156,20 +157,22 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
 .x-theme::before { content: ""; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; background: linear-gradient(to right, light-dark(currentColor, transparent) 50%, light-dark(transparent, currentColor) 50%); }
 
 /* Entries: projects and experience as a plain list. */
-.x-entries { list-style: none; padding: 0; margin: 0; display: grid; gap: clamp(24px, 3vw, 30px); }
+.x-entries { list-style: none; padding: 0; margin: 0; display: grid; gap: clamp(12px, 1.5vw, 15px); }
 .x-entries h3 { font: var(--type-body-strong); font-size: var(--size-prose); font-weight: 500; color: var(--text-primary); }
 .x-sub { font-family: var(--x-flex); font-weight: 300; color: var(--text-secondary); }
 .x-meta { font-family: var(--x-flex); font-weight: 300; font-size: var(--size-small); color: var(--text-secondary); margin-top: 2px; }
 .x-entries p:not(.x-meta) { margin-top: 6px; max-width: 68ch; }
-/* "In progress": a pink LED that blinks briefly about every 2s; solid under reduced motion. */
+/* "In progress": pink LEDs that blink in turn (key, Moxie, lab job), each briefly every 1.2s; solid under reduced motion. */
 /* The dot hangs in a small gap left of the title, centered on its first line, so the title keeps its alignment. */
 .x-live { position: relative; }
 .x-live::before, .x-legend::before {
   content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--x-pink);
-  animation: x-blink 2s steps(1, end) infinite;
+  animation: x-blink 1.2s steps(1, end) infinite;
 }
+.x-live::before { animation-delay: -0.8s; }
+.x-live.x-live-2::before { animation-delay: -0.4s; }
 .x-live::before { position: absolute; left: -15px; top: calc(0.5lh - 3.5px); }
-@keyframes x-blink { 0%, 88% { opacity: 1; } 90%, 96% { opacity: 0.15; } }
+@keyframes x-blink { 0% { opacity: 0.15; } 15%, 100% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .x-live::before, .x-legend::before { animation: none; opacity: 1; } }
 /* Page-level key: small and muted, first row of the column, left-aligned; clears the theme toggle on the right. */
 .x-intro .x-legend { justify-self: start; max-width: calc(100% - 52px); margin: 0 0 -2px; padding-top: 2px; }
@@ -187,7 +190,7 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
   .x-intro .x-theme { position: static; grid-row: 2; grid-column: 2; align-self: center; margin-right: -10px; }
 }
 /* Thank-you line above the footer. */
-.x-thanks { font: var(--type-body); font-family: var(--x-flex); color: var(--text-secondary); margin: 8px 0 20px; max-width: 60ch; }
+.x-thanks { font: var(--type-body); font-family: var(--x-flex); color: var(--text-secondary); margin: 4px 0 10px; max-width: 60ch; }
 /* A small, quiet link under an entry, with a 44px tap target. */
 .x-watch {
   display: inline-flex; align-items: center; min-height: var(--tap);
@@ -203,13 +206,13 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
 #experience li::before, #experience li::marker, #experience h3:not(.x-live)::before { content: none; display: none; }
 
 /* Tighter rhythm: about 30% less space between sections and under each heading, same proportions on phones. */
-.main { gap: 12px; }
-.section { padding-block: clamp(28px, 4.2vw, 50px) clamp(12px, 1.4vw, 16px); }
-.section .head { margin-bottom: clamp(16px, 2vw, 24px); }
+.main { gap: 6px; }
+.section { padding-block: clamp(14px, 2.1vw, 25px) clamp(6px, 0.7vw, 8px); }
+.section .head { margin-bottom: clamp(8px, 1vw, 12px); }
 /* Competitions intro sits right under its heading like a subtitle. */
 #competitions .head { margin-bottom: 5px; }
 #competitions .x-lede { margin-top: 0; margin-bottom: 0; }
-#competitions .x-lede + .x-entries { margin-top: clamp(16px, 2vw, 24px); }
+#competitions .x-lede + .x-entries { margin-top: clamp(8px, 1vw, 12px); }
 
 .x-lede { max-width: 60ch; font-family: var(--x-flex); font-weight: 300; color: var(--text-secondary); }
 .x-edu { display: grid; gap: 6px; }
@@ -217,67 +220,53 @@ h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
 .head h2 { color: var(--x-hazelnut); font-weight: 600; }
 .foot, .foot p { font-family: var(--x-flex); font-weight: 300; }
 
-/* Skills bubble: a round chocolate button she can drag anywhere; it snaps to the nearest side on release
-   and a tap opens the drawer. The script positions it with a transform; .x-safe marks the safe area. */
-.x-safe {
-  position: fixed; inset: 0; visibility: hidden; pointer-events: none;
-  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
-}
-.x-bubble {
-  position: fixed; z-index: 40; left: 0; top: 0;
-  width: var(--x-bubble); height: var(--x-bubble); padding: 0;
-  display: grid; place-items: center; border-radius: 50%;
-  border: 1px solid var(--x-pink); background: var(--x-choc); color: var(--x-matte);
-  box-shadow: 0 6px 18px var(--x-shadow);
-  font: var(--type-label); letter-spacing: 0.02em;
-  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  visibility: hidden; /* shown once the script has placed it */
-}
-.x-bubble.is-placed { visibility: visible; }
-.x-bubble.is-snapping { transition: transform 260ms var(--ease-out); }
-.x-bubble.is-dragging { cursor: grabbing; box-shadow: 0 10px 26px var(--x-shadow); }
-.x-bubble:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--x-pink) 35%, transparent), 0 6px 18px var(--x-shadow); }
-.x-bubble:focus-visible { outline: 2px solid var(--x-pink); outline-offset: 3px; }
-
-/* Skills drawer: a panel that slides in from the right over a scrim. */
-.x-scrim {
-  position: fixed; inset: 0; z-index: 50; background: var(--x-scrim);
-  opacity: 0; visibility: hidden;
-  transition: opacity var(--dur-quick) var(--ease-out), visibility 0s linear var(--dur-quick);
-}
-.x-drawer {
-  position: fixed; z-index: 60; top: 0; right: 0; bottom: 0;
-  width: 320px; max-width: 100vw; overflow-y: auto; overscroll-behavior: contain;
-  padding: calc(20px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) 24px;
-  background: var(--x-panel); color: var(--text-primary);
-  border-left: 2px solid var(--x-brown);
-  box-shadow: -12px 0 32px var(--x-shadow);
-  transform: translateX(100%); visibility: hidden; touch-action: pan-y;
-  transition: transform 280ms var(--ease-out), visibility 0s linear 280ms;
-}
-@media (max-width: 600px) { .x-drawer { width: 85vw; } }
-.x-drawer.is-open { transform: translateX(0); visibility: visible; transition: transform 280ms var(--ease-out), visibility 0s; }
-.x-scrim.is-open { opacity: 1; visibility: visible; transition: opacity var(--dur-quick) var(--ease-out), visibility 0s; }
-.x-drawer.is-dragging { transition: none; }
-.x-drawer__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--x-brown); }
-.x-drawer h2 { font: var(--type-title); font-weight: 600; color: var(--x-hazelnut); }
-.x-drawer h2:focus { outline: none; }
-.x-close {
-  width: var(--tap); height: var(--tap); margin-right: -10px; display: grid; place-items: center;
-  border: 0; border-radius: 50%; background: transparent; color: var(--text-secondary);
-  font: var(--weight-regular) 24px/1 var(--sans); cursor: pointer;
-}
-.x-close:hover { background: var(--hover-wash); color: var(--x-pink); }
-.x-close:focus-visible { outline: 2px solid var(--x-pink); outline-offset: 2px; }
-.x-skills { display: grid; gap: 18px; margin: 0; }
-.x-skills dt { font: var(--type-label); font-weight: 600; color: var(--x-brown); margin-bottom: 4px; }
+/* Skills: six groups in a two-column grid (three rows), each group name above its items. */
+.x-skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 40px; align-items: start; }
+.x-skills dl { display: flex; flex-direction: column; gap: 11px; margin: 0; }
+.x-skills dt { font: var(--type-label); font-weight: 600; color: var(--x-brown); margin-bottom: 2px; }
 .x-skills dd { margin: 0; font-weight: 400; }
-@media (prefers-reduced-motion: reduce) {
-  .x-drawer, .x-drawer.is-open, .x-scrim, .x-scrim.is-open, .x-bubble.is-snapping { transition: none; }
-}
+@media (max-width: 600px) { .x-skills { column-gap: 20px; } .x-skills dl { gap: 9px; } }
+
+/* Half the space under the intro, matching the halved gaps between sections. */
+.x-intro { padding-bottom: clamp(14px, 2vw, 20px); }
 
 /* Short screens (Duo folded, 375x667, Duo landscape): less space above the name. */
 @media (max-height: 700px) {
   .page { padding-top: calc(28px + env(safe-area-inset-top, 0px)); }
 }
+/* Wide screens: three columns. Skills and Education on the left, the main story in the middle,
+   Competitions on the right. Both side columns stay put (sticky) while the middle scrolls.
+   Below 1360px the side columns fold back into the single column in their old order. */
+.x-center, .x-side { display: contents; }
+@media (min-width: 1360px) {
+  .page { max-width: 1520px; grid-template-columns: minmax(300px, 1.1fr) minmax(0, 2fr) minmax(260px, 0.9fr); column-gap: 64px; justify-content: center; }
+  .main { grid-column: 1 / -1; grid-template-columns: subgrid; column-gap: 64px; align-items: start; }
+  .x-center { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; grid-column: 2; grid-row: 1; min-width: 0; }
+  .x-side { display: grid; gap: 6px; align-content: start; position: sticky; top: 24px; grid-row: 1; min-width: 0;
+    max-height: calc(100vh - 48px); overflow-y: auto; scrollbar-width: none; }
+  .x-side::-webkit-scrollbar { display: none; }
+  .x-side-l { grid-column: 1; }
+  .x-side-r { grid-column: 3; }
+  .x-side .section:first-child { padding-top: 0; }
+  .x-skills { column-gap: 28px; }
+  .x-thanks, .foot { grid-column: 2; }
+}
+
+/* Theme switch: a small floating circle on the right edge, always in reach, tap to flip light/dark. */
+.x-intro .x-theme, .x-theme {
+  position: fixed; top: 50%; right: max(12px, env(safe-area-inset-right, 0px)); transform: translateY(-50%);
+  z-index: 5; width: 40px; height: 40px; margin: 0; grid-row: auto; grid-column: auto;
+  background: var(--fill-primary-on); color: var(--x-brown);
+  box-shadow: 0 0 0 1px var(--x-hazelnut), 0 4px 14px rgba(59, 42, 32, 0.12);
+}
+.x-theme:hover { background: var(--fill-primary-on); color: var(--x-pink); }
+.x-intro h1 { padding-right: 0; }
+.x-intro .x-legend { max-width: none; }
+@media (max-width: 600px) { .x-intro h1 { grid-column: 1 / -1; } }
+/* Phones: the circle sits low on the right side, in thumb reach, clear of the reading line. */
+@media (max-width: 600px) {
+  .x-intro .x-theme, .x-theme { top: auto; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); transform: none; width: 44px; height: 44px; }
+}
+/* No visible scroll bars anywhere; the page and side columns still scroll normally. */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }

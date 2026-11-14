@@ -26,137 +26,12 @@
   label();
 })();
 
-// Skills drawer, opened by the movable bubble.
-(function () {
-  var tab = document.getElementById("skills-bubble");
-  var drawer = document.getElementById("skills-drawer");
-  var scrim = document.getElementById("skills-scrim");
-  var closeBtn = document.getElementById("skills-close");
-  var title = document.getElementById("skills-title");
-  if (!tab || !drawer || !scrim || !closeBtn || !title) return;
-  var open = false;
-
-  function setOpen(next, returnFocus) {
-    open = next;
-    drawer.classList.toggle("is-open", next);
-    scrim.classList.toggle("is-open", next);
-    drawer.style.transform = "";
-    tab.setAttribute("aria-expanded", next ? "true" : "false");
-    if (next) { drawer.removeAttribute("inert"); title.focus({ preventScroll: true }); }
-    else { drawer.setAttribute("inert", ""); if (returnFocus) tab.focus({ preventScroll: true }); }
-  }
-
-  // A click comes from a tap (no drag), Enter or Space; a drag sets data-dragged and is ignored once.
-  tab.addEventListener("click", function () {
-    if (tab.dataset.dragged) { delete tab.dataset.dragged; return; }
-    setOpen(!open, false);
-  });
-  closeBtn.addEventListener("click", function () { setOpen(false, true); });
-  scrim.addEventListener("click", function () { setOpen(false, true); });
-  document.addEventListener("keydown", function (e) {
-    if (!open) return;
-    if (e.key === "Escape") { e.preventDefault(); setOpen(false, true); return; }
-    if (e.key === "Tab") {
-      var f = drawer.querySelectorAll("button, a[href], [tabindex]:not([tabindex='-1'])");
-      var first = f[0], last = f[f.length - 1];
-      if (!first) return;
-      if (e.shiftKey && (document.activeElement === first || document.activeElement === title)) { e.preventDefault(); last.focus(); }
-      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-    }
-  });
-
-  // Swipe right on the panel closes it; the panel follows the finger.
-  var sx = 0, sy = 0, dx = 0, dragging = false, decided = false;
-  drawer.addEventListener("touchstart", function (e) {
-    sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; dragging = false; decided = false;
-  }, { passive: true });
-  drawer.addEventListener("touchmove", function (e) {
-    var mx = e.touches[0].clientX - sx, my = e.touches[0].clientY - sy;
-    if (!decided && (Math.abs(mx) > 8 || Math.abs(my) > 8)) { decided = true; dragging = Math.abs(mx) > Math.abs(my); if (dragging) drawer.classList.add("is-dragging"); }
-    if (dragging) { dx = Math.max(0, mx); drawer.style.transform = "translateX(" + dx + "px)"; }
-  }, { passive: true });
-  function endDrag() {
-    if (!dragging) return;
-    dragging = false;
-    drawer.classList.remove("is-dragging");
-    if (dx > Math.min(80, drawer.offsetWidth * 0.25)) setOpen(false, true);
-    else drawer.style.transform = "";
-  }
-  drawer.addEventListener("touchend", endDrag);
-  drawer.addEventListener("touchcancel", endDrag);
-})();
-
-// Skills bubble: drag with mouse or finger (pointer events, one rAF per frame), snap to the nearest
-// side on release, stay inside the safe area. Movement under 6px counts as a tap.
-(function () {
-  var b = document.getElementById("skills-bubble");
-  var safeEl = document.getElementById("x-safe");
-  if (!b || !safeEl) return;
-  var GAP = 12, SLOP = 6;
-  var x = 0, y = 0, side = "right", yFrac = 2 / 3, inited = false;
-  var id = null, sx = 0, sy = 0, ox = 0, oy = 0, moved = false, queued = false;
-
-  function bounds() {
-    var s = getComputedStyle(safeEl), w = b.offsetWidth, h = b.offsetHeight;
-    var l = parseFloat(s.paddingLeft) || 0, r = parseFloat(s.paddingRight) || 0;
-    var t = parseFloat(s.paddingTop) || 0, bt = parseFloat(s.paddingBottom) || 0;
-    var W = window.innerWidth, H = window.innerHeight;
-    return { x0: l + GAP, x1: W - r - GAP - w, y0: t + GAP, y1: H - bt - GAP - h };
-  }
-  function clamp(v, a, z) { return Math.max(a, Math.min(z, v)); }
-  function apply() { queued = false; b.style.transform = "translate3d(" + Math.round(x) + "px," + Math.round(y) + "px,0)"; }
-  function frame() { if (!queued) { queued = true; requestAnimationFrame(apply); } }
-  function place() {
-    var r = bounds();
-    x = side === "left" ? r.x0 : r.x1;
-    y = clamp(r.y0 + (r.y1 - r.y0) * yFrac, r.y0, r.y1);
-    apply();
-    if (!inited) { inited = true; b.classList.add("is-placed"); }
-  }
-  function snap() {
-    var r = bounds();
-    side = x + b.offsetWidth / 2 < window.innerWidth / 2 ? "left" : "right";
-    y = clamp(y, r.y0, r.y1);
-    yFrac = r.y1 > r.y0 ? (y - r.y0) / (r.y1 - r.y0) : 0;
-    b.classList.add("is-snapping");
-    x = side === "left" ? r.x0 : r.x1;
-    apply();
-  }
-  b.addEventListener("transitionend", function () { b.classList.remove("is-snapping"); });
-
-  b.addEventListener("pointerdown", function (e) {
-    if (e.button !== 0 || id !== null) return;
-    id = e.pointerId; sx = e.clientX; sy = e.clientY; ox = x; oy = y; moved = false;
-    b.classList.remove("is-snapping");
-    try { b.setPointerCapture(id); } catch (err) { /* capture unavailable: moves still arrive on the bubble */ }
-  });
-  b.addEventListener("pointermove", function (e) {
-    if (e.pointerId !== id) return;
-    var dx = e.clientX - sx, dy = e.clientY - sy;
-    if (!moved && Math.hypot(dx, dy) <= SLOP) return;
-    if (!moved) { moved = true; b.classList.add("is-dragging"); }
-    var r = bounds();
-    x = clamp(ox + dx, r.x0, r.x1); y = clamp(oy + dy, r.y0, r.y1);
-    frame();
-  });
-  function release(e) {
-    if (e.pointerId !== id) return;
-    id = null;
-    b.classList.remove("is-dragging");
-    if (moved) { b.dataset.dragged = "1"; snap(); setTimeout(function () { delete b.dataset.dragged; }, 400); }
-  }
-  b.addEventListener("pointerup", release);
-  b.addEventListener("pointercancel", function (e) { release(e); delete b.dataset.dragged; });
-
-  window.addEventListener("resize", place, { passive: true });
-  place();
-})();
-
 // Circuit board: one connected network grown over a grid that covers the whole document
 // (a single tree, so every trace joins the others, plus a few loops), drawn on one canvas.
 // Runs are straight horizontal or vertical lines meeting at right angles; T junctions at most.
 // Comets walk the network edge by edge and pick a random branch at every junction.
-// The board scrolls at 85% of the content's speed; a pink glow follows the cursor or last touch.
+// The board holds still on screen while the content scrolls over it; a pink glow follows the cursor or last touch.
+// Text carries a halo in the page colour (styles.css), so lines fade out right at the letters.
 (function () {
   var cv = document.getElementById("x-net");
   if (!cv || !cv.getContext) return;
@@ -164,11 +39,26 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   // Directions: 0 right, 1 down, 2 left, 3 up; the opposite of d is (d + 2) % 4.
   var DX = [1, 0, -1, 0], DY = [0, 1, 0, -1], TAIL = 120;
-  var net = null, comets = [], dpr = 1, VW = 0, VH = 0, K = 0.85;
+  var net = null, comets = [], dpr = 1, VW = 0, VH = 0, K = 0;
   var col = { trace: "rgba(255,119,169,0.4)", hi: "rgba(255,119,169,0.9)", glow: "rgba(255,119,169,0.1)" };
   var px = 0, py = 0, pointOn = false, lensA = 0, LR = 190;
   var lc = document.createElement("canvas"), lx = lc.getContext("2d");
   var last = 0, looping = false, drawQueued = false;
+  // Text boxes in document coordinates, one per rendered line, with a feathered edge so lines fade out softly instead of stopping at a box.
+  var TEXT = "h1, h2, h3, p, dt, dd, .x-entries ul li, .x-links a", PAD = 2, boxes = [];
+  function readBoxes() {
+    var els = document.querySelectorAll(TEXT), r = document.createRange(), sx = window.scrollX, sy = window.scrollY;
+    boxes = [];
+    for (var i = 0; i < els.length; i++) {
+      r.selectNodeContents(els[i]);
+      var rs = r.getClientRects();
+      for (var j = 0; j < rs.length; j++) {
+        var b = rs[j];
+        if (b.width < 1 || b.height < 1) continue;
+        boxes.push([b.left + sx - PAD, b.top + sy - PAD, b.width + PAD * 2, b.height + PAD * 2]);
+      }
+    }
+  }
 
   function rng(seed) {
     return function () {
@@ -336,11 +226,6 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, VW, VH);
     var lensOn = lensA > 0.01 && !reduce.matches;
-    if (lensOn) {
-      var g = ctx.createRadialGradient(px, py, 0, px, py, LR * 1.2);
-      g.addColorStop(0, col.glow); g.addColorStop(1, "rgba(255,119,169,0)");
-      ctx.globalAlpha = lensA; ctx.fillStyle = g; ctx.fillRect(px - LR * 1.2, py - LR * 1.2, LR * 2.4, LR * 2.4); ctx.globalAlpha = 1;
-    }
     ctx.translate(0, -oy);
     ctx.strokeStyle = col.trace; ctx.lineWidth = 1; ctx.lineJoin = "miter"; ctx.lineCap = "square";
     for (i = 0; i < ch.length; i++) { c = ch[i]; if (c.y1 >= oy - 2 && c.y0 <= oy + VH + 2) ctx.stroke(c.p); }
@@ -359,6 +244,25 @@
       ctx.globalAlpha = lensA; ctx.drawImage(lc, px - LR, wy - LR, LR * 2, LR * 2); ctx.globalAlpha = 1;
     }
     if (!reduce.matches) for (i = 0; i < comets.length; i++) drawComet(comets[i], oy);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Fade the board out behind text with a soft, feathered edge (no hard boxes).
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.fillStyle = "#000"; ctx.shadowColor = "#000"; ctx.shadowBlur = 14 * dpr;
+    var vx = window.scrollX, vy = window.scrollY;
+    for (i = 0; i < boxes.length; i++) {
+      var bx = boxes[i], ty = bx[1] - vy;
+      if (ty + bx[3] < -20 || ty > VH + 20) continue;
+      ctx.fillRect(bx[0] - vx, ty, bx[2], bx[3]);
+    }
+    ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
+    // The cursor glow is a soft wash, so it goes under everything rather than being cut around text.
+    ctx.globalCompositeOperation = "destination-over";
+    if (lensOn) {
+      var g = ctx.createRadialGradient(px, py, 0, px, py, LR * 1.2);
+      g.addColorStop(0, col.glow); g.addColorStop(1, "rgba(255,119,169,0)");
+      ctx.globalAlpha = lensA; ctx.fillStyle = g; ctx.fillRect(px - LR * 1.2, py - LR * 1.2, LR * 2.4, LR * 2.4); ctx.globalAlpha = 1;
+    }
+    ctx.globalCompositeOperation = "source-over";
   }
 
   function loop(now) {
@@ -392,10 +296,11 @@
       VW = w; VH = h; dpr = nd;
       cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
     }
-    K = reduce.matches ? 1 : 0.85;
+    K = 0;
     var docH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
     var need = VH + Math.max(0, docH - window.innerHeight) * K + 40;
     if (!net || net.W !== VW || net.H < need) { net = build(VW, need + 240); seedComets(); }
+    readBoxes();
     LR = VW < 600 ? 130 : 190;
     var ls = Math.round(LR * 2 * dpr);
     if (lc.width !== ls) { lc.width = ls; lc.height = ls; }
@@ -414,6 +319,7 @@
   new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   if (window.ResizeObserver) new ResizeObserver(measure).observe(document.body);
   window.addEventListener("load", measure);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
   measure();
   readColors();
   start();
