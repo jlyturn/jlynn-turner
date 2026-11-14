@@ -39,7 +39,7 @@
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   // Directions: 0 right, 1 down, 2 left, 3 up; the opposite of d is (d + 2) % 4.
   var DX = [1, 0, -1, 0], DY = [0, 1, 0, -1], TAIL = 120;
-  var net = null, comets = [], dpr = 1, VW = 0, VH = 0, K = 0;
+  var net = null, comets = [], dpr = 1, VW = 0, VH = 0;
   var col = { trace: "rgba(255,119,169,0.4)", hi: "rgba(255,119,169,0.9)", glow: "rgba(255,119,169,0.1)" };
   var px = 0, py = 0, pointOn = false, lensA = 0, LR = 190;
   var lc = document.createElement("canvas"), lx = lc.getContext("2d");
@@ -222,7 +222,7 @@
 
   function draw() {
     if (!net) return;
-    var oy = window.scrollY * K, ch = net.chains, i, c;
+    var oy = 0, ch = net.chains, i, c;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, VW, VH);
     var lensOn = lensA > 0.01 && !reduce.matches;
@@ -296,9 +296,7 @@
       VW = w; VH = h; dpr = nd;
       cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
     }
-    K = 0;
-    var docH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
-    var need = VH + Math.max(0, docH - window.innerHeight) * K + 40;
+    var need = VH + 40;
     if (!net || net.W !== VW || net.H < need) { net = build(VW, need + 240); seedComets(); }
     readBoxes();
     LR = VW < 600 ? 130 : 190;
@@ -308,7 +306,12 @@
   }
   function point(e) { px = e.clientX; py = e.clientY; pointOn = true; }
 
-  window.addEventListener("scroll", requestDraw, { passive: true });
+  // The side columns are sticky on wide screens, so their text moves against the page while scrolling:
+  // re-measure the text boxes on every scroll (window or side column) so lines never run through words.
+  function onScroll() { readBoxes(); requestDraw(); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  var sides = document.querySelectorAll(".x-side");
+  for (var si = 0; si < sides.length; si++) sides[si].addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", measure, { passive: true });
   window.addEventListener("pointermove", function (e) { if (e.pointerType !== "touch") point(e); }, { passive: true });
   window.addEventListener("pointerdown", point, { passive: true });
@@ -324,3 +327,4 @@
   readColors();
   start();
 })();
+
