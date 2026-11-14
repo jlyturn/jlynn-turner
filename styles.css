@@ -1,0 +1,283 @@
+/* J'Lynn Turner portfolio: one stylesheet, self-hosted fonts, no third-party requests.
+   Layout: one column, max 720px, tested 375 to 1280 wide, including iPhone Duo folded and open. */
+
+@font-face {
+  font-family: 'Google Sans';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("fonts/google-sans-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Google Sans Flex';
+  font-style: normal;
+  font-weight: 300;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("fonts/google-sans-flex-latin.woff2") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --fill-primary: light-dark(#3b2a20, #f3eae2);
+  --text-primary: light-dark(#3b2a20, #f3eae2);
+  --text-secondary: light-dark(#66503f, #cdb8a6);
+  --fill-primary-on: light-dark(#f7f5f2, #241914);
+  --hover-wash: light-dark(#3b2a200d, #f3eae20d);
+  --sans: "Google Sans", system-ui, sans-serif;
+  --lh: 1.3;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 600;
+  --size-caption: 12px;
+  --size-small: 14px;
+  --size-body: 16px;
+  --size-prose: 16px;
+  --size-title: clamp(20px, 0.5vw + 18px, 22px);
+  --type-label: var(--weight-medium) var(--size-small)/var(--lh) var(--sans);
+  --type-body: var(--weight-regular) var(--size-body)/var(--lh) var(--sans);
+  --type-body-strong: var(--weight-medium) var(--size-body)/var(--lh) var(--sans);
+  --type-title: var(--weight-regular) var(--size-title)/var(--lh) var(--sans);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --dur-quick: 160ms;
+  --page-max: 720px;
+  --gutter: clamp(20px, 5vw, 32px);
+  --tap: 44px;
+  --x-pink: #ff77a9;
+  --x-choc: #8b5e3c;
+  --x-matte: #f7f5f2;
+  --x-brown: light-dark(#8b5e3c, #c99a72);
+  --x-hazelnut: light-dark(#a67b5b, #c9a27e);
+  --x-panel: light-dark(#efebe6, #30231b);
+  --x-shade: light-dark(#3b2a20, #0d0806);
+  --x-scrim: color-mix(in srgb, var(--x-shade) 20%, transparent);
+  --x-shadow: color-mix(in srgb, var(--x-shade) 12%, transparent);
+  --x-trace: light-dark(rgba(255, 119, 169, 0.4), rgba(255, 119, 169, 0.3));
+  --x-trace-hi: light-dark(rgba(255, 119, 169, 0.9), rgba(255, 119, 169, 0.8));
+  --x-trace-glow: light-dark(rgba(255, 119, 169, 0.1), rgba(255, 119, 169, 0.12));
+  --x-flex: "Google Sans Flex", var(--sans);
+  --x-bubble: 56px;
+}
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--fill-primary-on);
+  color: var(--text-primary);
+  font: var(--type-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+a { color: inherit; }
+b, strong { font-weight: var(--weight-bold); }
+p { margin: 0; text-wrap: pretty; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1, h2, h3, p, li, dd, dt { overflow-wrap: break-word; }
+:focus-visible { outline: 2px solid var(--fill-primary); outline-offset: 3px; border-radius: 6px; }
+
+/* Page column */
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+
+/* Sections */
+.section { min-width: 0; }
+.section > * + * { margin-top: clamp(20px, 2.4vw, 28px); }
+.section > .head + * { margin-top: 0; }
+.head { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 10px 40px; align-items: end; }
+.head h2 { font: var(--type-title); }
+@media (max-width: 899px) { .head { grid-template-columns: 1fr; } }
+.prose { display: grid; gap: 12px; max-width: 68ch; font-size: var(--size-prose); }
+
+/* Footer */
+.foot {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  gap: 16px 24px; padding-top: 24px;
+  font-size: var(--size-small); color: var(--text-secondary);
+}
+
+/* LAYOUT. One readable column, max 720px, on every screen from 375 to 1280: phones,
+   iPhone Duo folded 466x678, unfolded 669x951 and 951x669, laptops. CSS only, so the page
+   reflows instantly when the Duo folds, unfolds or rotates.
+   Units: clamp() for type and spacing, env(safe-area-inset-*) padding for the Dynamic Island,
+   the hinge corners and the home bar. Every link and the theme toggle are 44px tap targets.
+   Short screens (max-height 700: Duo folded, 375x667, Duo landscape) tighten the top spacing. */
+
+
+
+/* Safe areas: Dynamic Island, the Duo's corners in either orientation, the home indicator. */
+.page {
+  padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  padding-top: calc(clamp(40px, 9vw, 88px) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+}
+
+/* Background: one connected circuit network on a fixed full-viewport canvas below the page
+   (script at the end): 1px pink straight runs with right-angle turns, white-headed comets with pink tails.
+   The canvas carries its colors as computed styles for the script to read; it paints no border or outline. */
+.page { position: relative; z-index: 1; }
+.x-bg { position: fixed; inset: 0 0 auto 0; height: 100vh; height: 100lvh; z-index: 0; pointer-events: none; overflow: hidden; }
+.x-net {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  color: var(--x-trace); border-top-color: var(--x-trace-hi); outline-color: var(--x-trace-glow);
+}
+
+/* Intro: name, one line, where, and a row of plain links. */
+.x-intro { position: relative; display: grid; gap: 10px; padding-bottom: clamp(28px, 4vw, 40px); }
+.x-intro h1 { font: 700 clamp(30px, 1.6vw + 24px, 40px)/1.15 var(--sans); color: var(--x-brown); padding-right: 52px; }
+.x-title { font-size: var(--size-prose); color: var(--text-primary); max-width: 52ch; }
+.x-where { font-family: var(--x-flex); font-weight: 300; font-size: var(--size-small); color: var(--text-secondary); }
+.x-links { display: flex; flex-wrap: wrap; gap: 0 22px; margin-top: 4px; }
+.x-links a {
+  display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap);
+  font: var(--type-label); font-weight: 500; color: var(--text-primary);
+  text-decoration: underline; text-decoration-color: var(--x-brown);
+  text-decoration-thickness: 2px; text-underline-offset: 5px;
+}
+.x-links a:hover { text-decoration-color: var(--x-pink); }
+.x-theme {
+  position: absolute; top: -6px; right: -10px;
+  width: var(--tap); height: var(--tap); display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--text-secondary); cursor: pointer;
+}
+.x-theme:hover { background: var(--hover-wash); color: var(--text-primary); }
+.x-theme::before { content: ""; width: 14px; height: 14px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px currentColor; background: linear-gradient(to right, light-dark(currentColor, transparent) 50%, light-dark(transparent, currentColor) 50%); }
+
+/* Entries: projects and experience as a plain list. */
+.x-entries { list-style: none; padding: 0; margin: 0; display: grid; gap: clamp(24px, 3vw, 30px); }
+.x-entries h3 { font: var(--type-body-strong); font-size: var(--size-prose); font-weight: 500; color: var(--text-primary); }
+.x-sub { font-family: var(--x-flex); font-weight: 300; color: var(--text-secondary); }
+.x-meta { font-family: var(--x-flex); font-weight: 300; font-size: var(--size-small); color: var(--text-secondary); margin-top: 2px; }
+.x-entries p:not(.x-meta) { margin-top: 6px; max-width: 68ch; }
+/* "In progress": a pink LED that blinks briefly about every 2s; solid under reduced motion. */
+/* The dot hangs in a small gap left of the title, centered on its first line, so the title keeps its alignment. */
+.x-live { position: relative; }
+.x-live::before, .x-legend::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--x-pink);
+  animation: x-blink 2s steps(1, end) infinite;
+}
+.x-live::before { position: absolute; left: -15px; top: calc(0.5lh - 3.5px); }
+@keyframes x-blink { 0%, 88% { opacity: 1; } 90%, 96% { opacity: 0.15; } }
+@media (prefers-reduced-motion: reduce) { .x-live::before, .x-legend::before { animation: none; opacity: 1; } }
+/* Page-level key: small and muted, first row of the column, left-aligned; clears the theme toggle on the right. */
+.x-intro .x-legend { justify-self: start; max-width: calc(100% - 52px); margin: 0 0 -2px; padding-top: 2px; }
+.x-legend {
+  display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; text-wrap: pretty;
+  font-family: var(--x-flex); font-weight: 300; font-size: var(--size-caption); color: var(--text-secondary);
+}
+.x-legend::before { flex: none; margin-top: calc(0.75em - 3.5px); }
+/* Phones: the key takes the full width on its own first row, and the toggle sits beside the name. */
+@media (max-width: 600px) {
+  .x-intro { grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; }
+  .x-intro > * { grid-column: 1 / -1; }
+  .x-intro .x-legend { grid-row: 1; max-width: none; padding-top: 0; margin-bottom: 2px; }
+  .x-intro h1 { grid-row: 2; grid-column: 1; padding-right: 0; }
+  .x-intro .x-theme { position: static; grid-row: 2; grid-column: 2; align-self: center; margin-right: -10px; }
+}
+/* Thank-you line above the footer. */
+.x-thanks { font: var(--type-body); font-family: var(--x-flex); color: var(--text-secondary); margin: 8px 0 20px; max-width: 60ch; }
+/* A small, quiet link under an entry, with a 44px tap target. */
+.x-watch {
+  display: inline-flex; align-items: center; min-height: var(--tap);
+  font-family: var(--x-flex); font-weight: 300; font-size: var(--size-small); color: var(--text-secondary);
+  text-decoration: underline; text-decoration-color: var(--x-brown);
+  text-decoration-thickness: 1px; text-underline-offset: 4px;
+}
+.x-watch:hover { color: var(--text-primary); text-decoration-color: var(--x-pink); }
+.x-entries ul { list-style: disc; margin-top: 8px; padding-left: 18px; display: grid; gap: 4px; max-width: 68ch; }
+/* Experience: no dot markers of any kind on its entries. */
+#experience .x-entries, #experience .x-entries ul { list-style: none; }
+#experience .x-entries ul { padding-left: 0; }
+#experience li::before, #experience li::marker, #experience h3:not(.x-live)::before { content: none; display: none; }
+
+/* Tighter rhythm: about 30% less space between sections and under each heading, same proportions on phones. */
+.main { gap: 12px; }
+.section { padding-block: clamp(28px, 4.2vw, 50px) clamp(12px, 1.4vw, 16px); }
+.section .head { margin-bottom: clamp(16px, 2vw, 24px); }
+/* Competitions intro sits right under its heading like a subtitle. */
+#competitions .head { margin-bottom: 5px; }
+#competitions .x-lede { margin-top: 0; margin-bottom: 0; }
+#competitions .x-lede + .x-entries { margin-top: clamp(16px, 2vw, 24px); }
+
+.x-lede { max-width: 60ch; font-family: var(--x-flex); font-weight: 300; color: var(--text-secondary); }
+.x-edu { display: grid; gap: 6px; }
+.x-edu strong { font-weight: 500; }
+.head h2 { color: var(--x-hazelnut); font-weight: 600; }
+.foot, .foot p { font-family: var(--x-flex); font-weight: 300; }
+
+/* Skills bubble: a round chocolate button she can drag anywhere; it snaps to the nearest side on release
+   and a tap opens the drawer. The script positions it with a transform; .x-safe marks the safe area. */
+.x-safe {
+  position: fixed; inset: 0; visibility: hidden; pointer-events: none;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+.x-bubble {
+  position: fixed; z-index: 40; left: 0; top: 0;
+  width: var(--x-bubble); height: var(--x-bubble); padding: 0;
+  display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--x-pink); background: var(--x-choc); color: var(--x-matte);
+  box-shadow: 0 6px 18px var(--x-shadow);
+  font: var(--type-label); letter-spacing: 0.02em;
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  visibility: hidden; /* shown once the script has placed it */
+}
+.x-bubble.is-placed { visibility: visible; }
+.x-bubble.is-snapping { transition: transform 260ms var(--ease-out); }
+.x-bubble.is-dragging { cursor: grabbing; box-shadow: 0 10px 26px var(--x-shadow); }
+.x-bubble:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--x-pink) 35%, transparent), 0 6px 18px var(--x-shadow); }
+.x-bubble:focus-visible { outline: 2px solid var(--x-pink); outline-offset: 3px; }
+
+/* Skills drawer: a panel that slides in from the right over a scrim. */
+.x-scrim {
+  position: fixed; inset: 0; z-index: 50; background: var(--x-scrim);
+  opacity: 0; visibility: hidden;
+  transition: opacity var(--dur-quick) var(--ease-out), visibility 0s linear var(--dur-quick);
+}
+.x-drawer {
+  position: fixed; z-index: 60; top: 0; right: 0; bottom: 0;
+  width: 320px; max-width: 100vw; overflow-y: auto; overscroll-behavior: contain;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) calc(24px + env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) 24px;
+  background: var(--x-panel); color: var(--text-primary);
+  border-left: 2px solid var(--x-brown);
+  box-shadow: -12px 0 32px var(--x-shadow);
+  transform: translateX(100%); visibility: hidden; touch-action: pan-y;
+  transition: transform 280ms var(--ease-out), visibility 0s linear 280ms;
+}
+@media (max-width: 600px) { .x-drawer { width: 85vw; } }
+.x-drawer.is-open { transform: translateX(0); visibility: visible; transition: transform 280ms var(--ease-out), visibility 0s; }
+.x-scrim.is-open { opacity: 1; visibility: visible; transition: opacity var(--dur-quick) var(--ease-out), visibility 0s; }
+.x-drawer.is-dragging { transition: none; }
+.x-drawer__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--x-brown); }
+.x-drawer h2 { font: var(--type-title); font-weight: 600; color: var(--x-hazelnut); }
+.x-drawer h2:focus { outline: none; }
+.x-close {
+  width: var(--tap); height: var(--tap); margin-right: -10px; display: grid; place-items: center;
+  border: 0; border-radius: 50%; background: transparent; color: var(--text-secondary);
+  font: var(--weight-regular) 24px/1 var(--sans); cursor: pointer;
+}
+.x-close:hover { background: var(--hover-wash); color: var(--x-pink); }
+.x-close:focus-visible { outline: 2px solid var(--x-pink); outline-offset: 2px; }
+.x-skills { display: grid; gap: 18px; margin: 0; }
+.x-skills dt { font: var(--type-label); font-weight: 600; color: var(--x-brown); margin-bottom: 4px; }
+.x-skills dd { margin: 0; font-weight: 400; }
+@media (prefers-reduced-motion: reduce) {
+  .x-drawer, .x-drawer.is-open, .x-scrim, .x-scrim.is-open, .x-bubble.is-snapping { transition: none; }
+}
+
+/* Short screens (Duo folded, 375x667, Duo landscape): less space above the name. */
+@media (max-height: 700px) {
+  .page { padding-top: calc(28px + env(safe-area-inset-top, 0px)); }
+}
