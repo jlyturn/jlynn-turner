@@ -1,0 +1,4 @@
+# Netlify runs the site check before every deploy. If it fails, nothing is published.
+[build]
+  command = "node scripts/check.mjs"
+  publish = "dist"
