@@ -153,7 +153,7 @@ scanPrivate("app.js", js);
 const pdf = readFileSync(join(ROOT, "JLynn_Turner_Resume.pdf")).toString("latin1");
 const pdfInfo = [...pdf.matchAll(/\/(?:Author|Creator|Producer|Title|Subject|Keywords)\s*\(([^)]*)\)/g)].map((m) => m[1]).join(" ");
 scanPrivate("Resume PDF details", pdfInfo);
-const PDF_LINKS = new Set(["mailto:jly.turn@outlook.com", "https://www.linkedin.com/in/jlynn-turner"]);
+const PDF_LINKS = new Set(["mailto:jly.turn@outlook.com", "https://www.linkedin.com/in/jlynn-turner", "https://jlynn-turner.netlify.app"]);
 for (const m of pdf.matchAll(/\/URI\s*\(([^)]*)\)/g)) if (!PDF_LINKS.has(m[1])) fail(`Resume PDF has an unexpected link: ${m[1]}`);
 
 // 11. Size budget: keeps the page fast on a phone.
