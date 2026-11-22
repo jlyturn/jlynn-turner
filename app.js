@@ -245,16 +245,6 @@
     }
     if (!reduce.matches) for (i = 0; i < comets.length; i++) drawComet(comets[i], oy);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // Fade the board out behind text with a soft, feathered edge (no hard boxes).
-    ctx.globalCompositeOperation = "destination-out";
-    ctx.fillStyle = "#000"; ctx.shadowColor = "#000"; ctx.shadowBlur = 14 * dpr;
-    var vx = window.scrollX, vy = window.scrollY;
-    for (i = 0; i < boxes.length; i++) {
-      var bx = boxes[i], ty = bx[1] - vy;
-      if (ty + bx[3] < -20 || ty > VH + 20) continue;
-      ctx.fillRect(bx[0] - vx, ty, bx[2], bx[3]);
-    }
-    ctx.shadowBlur = 0; ctx.shadowColor = "transparent";
     // The cursor glow is a soft wash, so it goes under everything rather than being cut around text.
     ctx.globalCompositeOperation = "destination-over";
     if (lensOn) {
