@@ -66,13 +66,6 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
 }
-/* Halo in the page colour around every letter: circuit lines fade out at the words, with no boxes. */
-main, header, footer {
-  --halo: var(--fill-primary-on);
-  text-shadow:
-    1px 0px 0 var(--halo), -1px 0px 0 var(--halo), 0px 1px 0 var(--halo), 0px -1px 0 var(--halo), 0.7px 0.7px 0 var(--halo), -0.7px 0.7px 0 var(--halo), 0.7px -0.7px 0 var(--halo), -0.7px -0.7px 0 var(--halo), 2px 0px 0 var(--halo), -2px 0px 0 var(--halo), 0px 2px 0 var(--halo), 0px -2px 0 var(--halo), 1.4px 1.4px 0 var(--halo), -1.4px 1.4px 0 var(--halo), 1.4px -1.4px 0 var(--halo), -1.4px -1.4px 0 var(--halo), 3px 0px 0 var(--halo), -3px 0px 0 var(--halo), 0px 3px 0 var(--halo), 0px -3px 0 var(--halo), 2.1px 2.1px 0 var(--halo), -2.1px 2.1px 0 var(--halo), 2.1px -2.1px 0 var(--halo), -2.1px -2.1px 0 var(--halo),
-    0 0 6px var(--halo), 0 0 10px var(--halo);
-}
 a { color: inherit; }
 b, strong { font-weight: var(--weight-bold); }
 p { margin: 0; text-wrap: pretty; }
